@@ -270,13 +270,16 @@
                         <div class="profile-online-dot"></div>
                     </div>
                     <div class="profile-user-info">
-                        <h2 class="profile-name" id="profile-display-name" style="font-family:'Noto Serif SC',serif;">赵晓
+                        <h2 class="profile-name" id="profile-display-name" style="font-family:'Noto Serif SC',serif;">未设置姓名
                         </h2>
-                        <p class="profile-meta"><span id="profile-display-id">2026010042</span> · <span
-                                id="profile-display-major">计算机学院 · 软件工程</span></p>
-                        <div class="profile-badge">2026级新生</div>
+                        <p class="profile-meta"><span id="profile-display-id">未知学号</span> · <span
+                                id="profile-display-major">暂不能显示专业</span></p>
+                        <div class="profile-badge">待完善资料</div>
                     </div>
-                    <button class="profile-close-btn" id="profile-close-btn"><i data-lucide="x"></i></button>
+                    <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px;">
+                        <button class="profile-close-btn" id="profile-close-btn"><i data-lucide="x"></i></button>
+                        <button id="profile-logout-btn" style="background:transparent; border:none; color:var(--c-ink-light); cursor:pointer; font-size:0.75rem; text-decoration:underline;">退出登录</button>
+                    </div>
                 </div>
 
                 <!-- Stats Row -->
@@ -374,7 +377,10 @@
             </div>
             <div class="detail-body">
                 <span class="detail-category" id="detail-category">文学</span>
-                <h2 class="detail-name" id="detail-name" style="font-family:'Noto Serif SC',serif;"></h2>
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin: 8px 0 14px;">
+                    <h2 class="detail-name" id="detail-name" style="font-family:'Noto Serif SC',serif; margin:0;"></h2>
+                    <button class="detail-bookmark-btn" id="detail-bookmark-btn" title="收藏" style="background:none; border:none; cursor:pointer; color:var(--c-ink-light); display:flex; padding:4px; transition:color 0.2s;"><i data-lucide="bookmark" id="detail-bookmark-icon"></i></button>
+                </div>
                 <p class="detail-desc" id="detail-desc"></p>
                 <div class="detail-meta">
                     <div class="meta-item"><i data-lucide="users"></i><span id="detail-members"></span></div>

@@ -413,14 +413,21 @@ document.addEventListener("DOMContentLoaded", () => {
         formView.style.display = 'none';
         successView.style.display = 'block';
         
+        if (isLogged) {
+            mockUser.id = document.getElementById('input-student-id').value.trim() || mockUser.id;
+            mockUser.name = document.getElementById('input-name').value.trim() || mockUser.name;
+            mockUser.major = document.getElementById('input-major').value.trim() || mockUser.major;
+            if (typeof updateProfileHeader === 'function') updateProfileHeader();
+        }
+        
         // Record application
         let clubName = "某个选定的社团";
-            let cId = window.currentApplyClubId || 'c1'; 
-            let targetClub = allClubsArray.find(c => c.id === cId);
-            if(targetClub) clubName = targetClub.name;
-            recordApplication(cId, clubName);
-            
-            lucide.createIcons();
+        let cId = window.currentApplyClubId || 'c1'; 
+        let targetClub = allClubsArray.find(c => c.id === cId);
+        if(targetClub) clubName = targetClub.name;
+        recordApplication(cId, clubName);
+        
+        lucide.createIcons();
     });
 
     // Done button closes modal
@@ -464,7 +471,10 @@ document.addEventListener("DOMContentLoaded", () => {
         lucide.createIcons();
     }
 
+    let currentViewedClubId = null;
+
     function openClubDetail(club) {
+        currentViewedClubId = club.id;
         document.getElementById('detail-img').src = club.img;
         document.getElementById('detail-category').textContent = club.category;
         document.getElementById('detail-name').textContent = club.name;
@@ -474,7 +484,22 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('detail-location').textContent = club.location;
         document.getElementById('detail-tags').innerHTML = club.tags.map(t => `<span class="tag-pill">${t}</span>`).join('');
         
+        updateBookmarkBtnState();
         clubDetailPanel.classList.add('visible');
+    }
+
+    function updateBookmarkBtnState() {
+        const btn = document.getElementById('detail-bookmark-btn');
+        const icon = document.getElementById('detail-bookmark-icon');
+        if(!btn || !icon || !currentViewedClubId) return;
+        
+        if (isLogged && mockUser.bookmarks && mockUser.bookmarks.includes(currentViewedClubId)) {
+            icon.setAttribute('fill', 'var(--c-mustard)');
+            icon.style.color = 'var(--c-mustard)';
+        } else {
+            icon.setAttribute('fill', 'none');
+            icon.style.color = 'var(--c-ink-light)';
+        }
     }
 
     // Open Directory from Header '目录' btn
@@ -505,10 +530,8 @@ document.addEventListener("DOMContentLoaded", () => {
         dirOverlay.classList.remove('show');
         clubDetailPanel.classList.remove('visible');
         
-        // Find which club we are currently viewing
-        let currName = document.getElementById('detail-name').textContent;
-        let club = allClubsArray.find(c => c.name === currName);
-        if(club) window.currentApplyClubId = club.id;
+        // Reference the currently viewed club
+        window.currentApplyClubId = currentViewedClubId;
         
         setTimeout(() => { 
             if (!isLogged) {
@@ -520,21 +543,56 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 300);
     });
 
+    const detailBookmarkBtn = document.getElementById('detail-bookmark-btn');
+    if (detailBookmarkBtn) {
+        detailBookmarkBtn.addEventListener('click', () => {
+            if (!isLogged) {
+                openAuthModal('login');
+                return;
+            }
+            if (!currentViewedClubId) return;
+            
+            if (!mockUser.bookmarks) mockUser.bookmarks = [];
+            const idx = mockUser.bookmarks.indexOf(currentViewedClubId);
+            if (idx > -1) {
+                mockUser.bookmarks.splice(idx, 1);
+            } else {
+                mockUser.bookmarks.unshift(currentViewedClubId);
+            }
+            updateBookmarkBtnState();
+            renderBookmarks();
+        });
+    }
+
     // ==========================================
     // Profile & Transparency Logic
     // ==========================================
     
     let isLogged = false;
     let mockUser = {
-        name: "赵晓",
-        id: "2026010042",
-        major: "计算机学院 · 软件工程",
-        applications: [
-            { clubId: 'c5', clubName: '蒹葭文学社', status: 'approved', date: '2026-03-20', step: 3 },
-            { clubId: 'c8', clubName: '夜跑战队夜行者', status: 'rejected', date: '2026-03-15', step: 4 }
-        ],
+        name: "",
+        id: "",
+        major: "",
+        applications: [],
         bookmarks: []
     };
+
+    function updateProfileHeader() {
+        document.getElementById('profile-display-name').textContent = mockUser.name || "未设置姓名";
+        document.getElementById('profile-display-id').textContent = mockUser.id || "未知学号";
+        document.getElementById('profile-display-major').textContent = mockUser.major || "暂不能显示专业";
+        
+        const badge = document.querySelector('.profile-badge');
+        if (badge) {
+            if (mockUser.name) {
+                badge.textContent = "已认证学生";
+                document.getElementById('profile-avatar-display').textContent = mockUser.name.substring(0, 1) || "U";
+            } else {
+                badge.textContent = "待完善资料";
+                document.getElementById('profile-avatar-display').textContent = "?";
+            }
+        }
+    }
 
     function loginMockUser() {
         isLogged = true;
@@ -544,9 +602,36 @@ document.addEventListener("DOMContentLoaded", () => {
         const profileBtn = document.getElementById('profile-nav-btn');
         if (profileBtn) profileBtn.style.display = 'inline-flex';
         
+        updateProfileHeader();
         updateProfileStats();
         renderApplications();
+        renderBookmarks();
         renderTransparency();
+        updateBookmarkBtnState();
+    }
+
+    // Logout logic
+    const logoutBtn = document.getElementById('profile-logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            isLogged = false;
+            mockUser = {
+                name: "",
+                id: "",
+                major: "",
+                applications: [],
+                bookmarks: []
+            };
+            
+            const btn = document.getElementById('login-btn');
+            if (btn) btn.style.display = 'inline-block';
+            
+            const profileBtn = document.getElementById('profile-nav-btn');
+            if (profileBtn) profileBtn.style.display = 'none';
+            
+            document.getElementById('profile-overlay').classList.remove('show');
+            updateBookmarkBtnState();
+        });
     }
 
     function recordApplication(clubId, clubName) {
@@ -666,6 +751,55 @@ document.addEventListener("DOMContentLoaded", () => {
             container.appendChild(item);
         });
     }
+
+    function renderBookmarks() {
+        const container = document.getElementById('bookmarks-list');
+        if (!container) return;
+        
+        // Find elements inside, if empty state exists
+        const emptyState = container.querySelector('.empty-state');
+        
+        // Remove existing cards
+        container.querySelectorAll('.app-item').forEach(el => el.remove());
+        
+        if (!mockUser.bookmarks || mockUser.bookmarks.length === 0) {
+            if (emptyState) emptyState.style.display = 'block';
+            return;
+        }
+        
+        if (emptyState) emptyState.style.display = 'none';
+        
+        mockUser.bookmarks.forEach(cId => {
+            const club = allClubsArray.find(c => c.id === cId);
+            if (!club) return;
+            
+            const item = document.createElement('div');
+            item.className = 'app-item';
+            item.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <div class="app-club-name" style="cursor:pointer; display:flex; align-items:center;" onclick="viewClubFromProfile('${club.id}')">
+                            ${club.name} <i data-lucide="external-link" style="width:14px; height:14px; margin-left:6px; color:var(--c-ink-light)"></i>
+                        </div>
+                        <div class="app-date">${club.category} · 关注中</div>
+                    </div>
+                </div>
+            `;
+            container.appendChild(item);
+        });
+        lucide.createIcons();
+    }
+    
+    // Globally accessible function for the inline onclick
+    window.viewClubFromProfile = function(cId) {
+        document.getElementById('profile-overlay').classList.remove('show');
+        const club = allClubsArray.find(c => c.id === cId);
+        if (club) {
+            document.getElementById('dir-overlay').classList.add('show');
+            renderDirectory();
+            openClubDetail(club);
+        }
+    };
 
     function renderTransparency() {
         const container = document.getElementById('club-stats-list');
