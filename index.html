@@ -274,7 +274,7 @@
                         </h2>
                         <p class="profile-meta"><span id="profile-display-id">未知学号</span> · <span
                                 id="profile-display-major">暂不能显示专业</span></p>
-                        <div class="profile-badge">待完善资料</div>
+                        <button class="profile-badge profile-edit-btn" id="profile-edit-btn" style="cursor:pointer; border:1px solid rgba(255,255,255,0.2); transition:var(--trans-all); display:inline-flex; align-items:center;">完善个人资料 <i data-lucide="edit-2" style="width:12px; height:12px; margin-left:4px;"></i></button>
                     </div>
                     <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px;">
                         <button class="profile-close-btn" id="profile-close-btn"><i data-lucide="x"></i></button>
@@ -391,6 +391,39 @@
                 <button class="modal-submit-btn detail-apply-btn"
                     style="font-family:'Noto Serif SC',serif; margin-top:24px;" id="detail-apply-btn">申请加入 <i
                         data-lucide="send"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 个人资料编辑弹窗 (Profile Edit Modal) -->
+    <div class="modal-overlay" id="profile-edit-overlay">
+        <div class="modal-box">
+            <div class="modal-header-bar">
+                <span class="modal-issue">个人资料</span>
+                <button class="modal-close-btn" id="profile-edit-close"><i data-lucide="x"></i></button>
+            </div>
+            <div id="pe-form-view">
+                <h2 class="modal-title" style="font-family: 'Noto Serif SC', serif;">建立你的<br>专属档案</h2>
+                <p class="modal-subtitle">请完善以下核心资料，后续申请社团时将以此身份自动带入系统，免除重复手制之苦。</p>
+
+                <form class="apply-form" id="profile-edit-form">
+                    <div class="form-group">
+                        <label>学号 <span class="required">*</span></label>
+                        <input type="text" id="pe-input-id" placeholder="例：2026XXXXXXXX" maxlength="12" required />
+                        <div style="font-size:0.65rem; color:var(--c-text-muted); margin-top:4px;">请输入您的真实10位统一身份认证学号</div>
+                    </div>
+                    <div class="form-group">
+                        <label>姓名 <span class="required">*</span></label>
+                        <input type="text" id="pe-input-name" placeholder="例：张三" required />
+                        <div style="font-size:0.65rem; color:var(--c-text-muted); margin-top:4px;">请使用真实中文姓名以确保社团通过筛查</div>
+                    </div>
+                    <div class="form-group">
+                        <label>学院 / 专业 <span class="required">*</span></label>
+                        <input type="text" id="pe-input-major" placeholder="例：计算机学院·软件工程" required />
+                        <div style="font-size:0.65rem; color:var(--c-text-muted); margin-top:4px;">格式推荐填写目前录取的一级院系与专业方向</div>
+                    </div>
+                    <button type="submit" class="modal-submit-btn" style="font-family: 'Noto Serif SC', serif;">保存资料 <i data-lucide="check"></i></button>
+                </form>
             </div>
         </div>
     </div>

@@ -582,15 +582,16 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('profile-display-id').textContent = mockUser.id || "未知学号";
         document.getElementById('profile-display-major').textContent = mockUser.major || "暂不能显示专业";
         
-        const badge = document.querySelector('.profile-badge');
+        const badge = document.querySelector('#profile-edit-btn');
         if (badge) {
             if (mockUser.name) {
-                badge.textContent = "已认证学生";
+                badge.innerHTML = '修改个人资料 <i data-lucide="edit-2" style="width:12px; height:12px; margin-left:4px;"></i>';
                 document.getElementById('profile-avatar-display').textContent = mockUser.name.substring(0, 1) || "U";
             } else {
-                badge.textContent = "待完善资料";
+                badge.innerHTML = '完善个人资料 <i data-lucide="edit-2" style="width:12px; height:12px; margin-left:4px;"></i>';
                 document.getElementById('profile-avatar-display').textContent = "?";
             }
+            if (window.lucide) window.lucide.createIcons();
         }
     }
 
@@ -608,6 +609,41 @@ document.addEventListener("DOMContentLoaded", () => {
         renderBookmarks();
         renderTransparency();
         updateBookmarkBtnState();
+    }
+
+    // Edit Profile Logic
+    const profileEditOverlay = document.getElementById('profile-edit-overlay');
+    const profileEditBtn = document.getElementById('profile-edit-btn');
+    const profileEditClose = document.getElementById('profile-edit-close');
+    const profileEditForm = document.getElementById('profile-edit-form');
+    
+    if (profileEditBtn) {
+        profileEditBtn.addEventListener('click', () => {
+            // Fill existing info if they have it
+            document.getElementById('pe-input-id').value = mockUser.id || '';
+            document.getElementById('pe-input-name').value = mockUser.name || '';
+            document.getElementById('pe-input-major').value = mockUser.major || '';
+            profileEditOverlay.classList.add('show');
+            lucide.createIcons();
+        });
+    }
+
+    if (profileEditClose) {
+        profileEditClose.addEventListener('click', () => {
+            profileEditOverlay.classList.remove('show');
+        });
+    }
+
+    if (profileEditForm) {
+        profileEditForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            mockUser.id = document.getElementById('pe-input-id').value.trim();
+            mockUser.name = document.getElementById('pe-input-name').value.trim();
+            mockUser.major = document.getElementById('pe-input-major').value.trim();
+            
+            updateProfileHeader();
+            profileEditOverlay.classList.remove('show');
+        });
     }
 
     // Logout logic
