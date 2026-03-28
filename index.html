@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,25 +8,30 @@
     <!-- Elegant Serif Fonts for Editorial Style -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Lora:ital,wght@0,400;0,500;1,400&family=Noto+Serif+SC:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Lora:ital,wght@0,400;0,500;1,400&family=Noto+Serif+SC:wght@400;600;700;900&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
+
 <body>
-    
+
     <div class="presentation-wrapper" id="app-container">
-        
+
         <!-- COVER PAGE -->
         <div class="page cover-page active" id="page-cover">
             <div class="magazine-header">
                 <span class="issue-number">第一期 / 秋季招新特刊</span>
                 <span class="magazine-title-small">CAMPUS LIFE</span>
                 <div class="header-right-group">
-                    <button class="login-btn" id="login-btn"><i data-lucide="user" class="icon-sm"></i> 登录</button>
+                    <button class="login-btn auth-trigger-btn" id="login-btn">登录</button>
+                    <button class="login-btn profile-nav-btn" id="profile-nav-btn" style="display:none;"><i
+                            data-lucide="layout-dashboard" class="icon-sm"></i> 我的</button>
                     <span class="index-link" id="index-dir-btn"><i data-lucide="compass" class="icon-sm"></i> 目录</span>
                 </div>
             </div>
-            
+
             <div class="cover-content">
                 <h1 class="editorial-title cover-title">翻开这本校园杂志，<br>遇见未知的自己</h1>
                 <p class="editorial-subtitle cover-subtitle">
@@ -34,7 +40,7 @@
                     <em>ClubMatch</em> 懂你的潜能，更懂你的向往。<br>
                     别让有趣的生活走弯路，现在就开始你的社团奇旅。
                 </p>
-                
+
                 <div class="cover-illustration">
                     <img src="campus-illustration.png" alt="校园新生插画" class="hero-image">
                     <div class="photo-caption">在光辉岁月中，追寻热爱与归属感。(2026 年秋)</div>
@@ -63,29 +69,34 @@
                 <span class="magazine-title-small">基于性格特质的独家定制</span>
                 <span class="index-link" id="restart-btn"><i data-lucide="rotate-ccw" class="icon-sm"></i> 重新测试</span>
             </div>
-            
+
             <div class="result-content layout-grid">
                 <div class="result-text-column">
                     <h2 class="section-label">(你的部落在召唤)</h2>
-                    <h1 class="result-title" id="match-title" style="font-family: 'Noto Serif SC', serif;">沉醉思辨：<br>校园辩论社</h1>
-                    
+                    <h1 class="result-title" id="match-title" style="font-family: 'Noto Serif SC', serif;">
+                        沉醉思辨：<br>校园辩论社</h1>
+
                     <div class="article-body" style="font-family: 'Noto Serif SC', serif;">
                         <span class="drop-cap" id="match-dropcap" style="font-family: 'Noto Serif SC', serif;">在</span>
                         <p id="match-desc">外人看来，辩论的世界或许是无休止的争吵。但我们都知道，那并非真相。辩论关乎逻辑、魅力与说服的艺术。你的回答展现了敏锐的思维与对智力交锋的偏爱。</p>
-                        
+
                         <p id="match-desc-extended">坦诚与真实是你的力量来源，加入这个群体将为你提供一个绝佳的舞台，让你能够升华自己的观点，并与志同道合的同龄人建立深刻的思想连接。</p>
-                        
+
                         <div class="quote-block" id="match-quote">
                             "多年来，我们懂得了划定清晰界限的价值，并不断打磨我们的论点，直到它们无懈可击。"
                         </div>
                     </div>
-                    
-                    <button class="editorial-btn solid-btn mt-4" style="font-family: 'Noto Serif SC', serif; font-weight: 600;">立即申请加入 <i data-lucide="check"></i></button>
+
+                    <button class="editorial-btn solid-btn mt-4"
+                        style="font-family: 'Noto Serif SC', serif; font-weight: 600;">立即申请加入 <i
+                            data-lucide="check"></i></button>
                 </div>
-                
+
                 <div class="result-visual-column">
                     <div class="polaroid-image">
-                        <img id="match-img" src="https://images.unsplash.com/photo-1528605105345-5344ea20e269?q=80&w=800&auto=format&fit=crop" alt="Club Vibes">
+                        <img id="match-img"
+                            src="https://images.unsplash.com/photo-1528605105345-5344ea20e269?q=80&w=800&auto=format&fit=crop"
+                            alt="Club Vibes">
                     </div>
                     <div class="secondary-matches">
                         <h3 style="font-family: 'Noto Serif SC', serif;">你可能还会喜欢：</h3>
@@ -117,11 +128,11 @@
                 <span class="modal-issue">申请加入</span>
                 <button class="modal-close-btn" id="modal-close-btn"><i data-lucide="x"></i></button>
             </div>
-            
+
             <div id="modal-form-view">
-                <h2 class="modal-title" style="font-family: 'Noto Serif SC', serif;">学籍认证<br>与注册</h2>
-                <p class="modal-subtitle">请填写以下信息完成身份验证，我们将第一时间通知社团负责人与你联系。</p>
-                
+                <h2 class="modal-title" style="font-family: 'Noto Serif SC', serif;">完善资料<br>与申请信息</h2>
+                <p class="modal-subtitle">请完善以下核心联系方式与申请理由，我们将第一时间通知社团负责人与你联系。</p>
+
                 <form class="apply-form" id="apply-form">
                     <div class="form-group">
                         <label>学号 <span class="required">*</span></label>
@@ -139,19 +150,203 @@
                         <label>联系方式 <span class="required">*</span></label>
                         <input type="tel" id="input-phone" placeholder="请输入手机号码" required />
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" id="group-reason">
                         <label>申请理由（选填）</label>
                         <textarea id="input-reason" placeholder="简单描述一下你对这个社团感兴趣的原因……" rows="3"></textarea>
                     </div>
-                    <button type="submit" class="modal-submit-btn" style="font-family: 'Noto Serif SC', serif;">提交申请 <i data-lucide="send"></i></button>
+                    <button type="submit" class="modal-submit-btn" style="font-family: 'Noto Serif SC', serif;">提交申请 <i
+                            data-lucide="send"></i></button>
                 </form>
             </div>
 
             <div id="modal-success-view" style="display:none;">
                 <div class="success-icon"><i data-lucide="check-circle"></i></div>
                 <h2 class="modal-title" style="font-family: 'Noto Serif SC', serif; text-align:center;">申请成功！</h2>
-                <p class="modal-subtitle" style="text-align:center;">我们已收到你的入社申请，社团负责人将在 <strong>3 个工作日内</strong>联系你。祝你旅程愉快！</p>
-                <button class="modal-submit-btn" id="modal-done-btn" style="font-family: 'Noto Serif SC', serif; margin: 30px auto 0; display: flex;">完成 <i data-lucide="arrow-right"></i></button>
+                <p class="modal-subtitle" style="text-align:center;">我们已收到你的入社申请，社团负责人将在 <strong>3
+                        个工作日内</strong>联系你。祝你旅程愉快！</p>
+                <button class="modal-submit-btn" id="modal-done-btn"
+                    style="font-family: 'Noto Serif SC', serif; margin: 30px auto 0; display: flex;">完成 <i
+                        data-lucide="arrow-right"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth Modal (Login / Register) -->
+    <div class="modal-overlay" id="auth-modal">
+        <div class="modal-box" style="max-width: 440px; padding: 40px 32px; border-radius: 16px; background: #FDFCF8;">
+            <button class="modal-close-btn" id="auth-close-btn"
+                style="position: absolute; right: 20px; top: 20px; background:none; border:none; color:var(--c-text-muted); cursor:pointer;"><i
+                    data-lucide="x"></i></button>
+
+            <!-- Login View -->
+            <div id="auth-login-view">
+                <h2 style="font-family: var(--font-display); font-size: 2rem; margin-bottom: 8px; color: #3A322F;">欢迎回来
+                </h2>
+                <p style="color: var(--c-text-muted); font-size: 0.9rem; margin-bottom: 32px;">登录您的 ClubMatch 账号</p>
+
+                <form id="auth-login-form">
+                    <div class="form-group">
+                        <label style="color: #6B625E;">邮箱</label>
+                        <input type="email" id="login-email" placeholder="yourname@whu.edu.cn" required
+                            style="border-radius: 12px; padding: 14px 16px; border: 1px solid #E5E0DA; background: #FFFFFF; font-size: 0.95rem;">
+                    </div>
+                    <div class="form-group" style="position: relative;">
+                        <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                            <label style="color: #6B625E;">密码</label>
+                            <a href="#" id="forget-pwd-btn" style="font-size: 0.8rem; color: #8A5A44; text-decoration: none;">忘记密码？</a>
+                        </div>
+                        <input type="password" id="login-pwd" placeholder="输入密码" required
+                            style="border-radius: 12px; padding: 14px 16px; border: 1px solid #E5E0DA; background: #FFFFFF; font-size: 0.95rem;">
+                    </div>
+
+                    <!-- Forget Password Verification Box -->
+                    <div id="forget-pwd-box" style="display: none; background: #F3EFEA; padding: 16px; border-radius: 12px; margin-top: 16px; transition: opacity 0.3s;">
+                        <p style="font-size: 0.85rem; color: #6B625E; margin-bottom: 12px;">将向 <strong id="verify-email-display">您的邮箱</strong> 发送验证码</p>
+                        <button type="button" id="send-code-btn" style="width: 100%; padding: 12px; background: #BD9A92; color: white; border: none; border-radius: 12px; font-size: 0.95rem; font-weight: 600; cursor: pointer; opacity: 0.9; transition: 0.2s;">发送验证码</button>
+                    </div>
+
+                    <div
+                        style="display: flex; align-items: center; margin: 20px 0 32px; font-size: 0.85rem; color: #6B625E;">
+                        <input type="checkbox" id="login-agree" required style="width: auto; margin-right: 8px;">
+                        <label for="login-agree" style="margin: 0; display: inline;">我已阅读并同意 <a href="#"
+                                style="color: #8A5A44; text-decoration: underline;">《ClubMatch 用户协议》</a></label>
+                    </div>
+
+                    <button type="submit" class="auth-submit-btn"
+                        style="width: 100%; padding: 14px; background: #B98C81; color: white; border: none; border-radius: 24px; font-size: 1.05rem; font-weight: 600; letter-spacing: 2px; cursor: pointer; transition: 0.3s opacity;">登录</button>
+                </form>
+
+                <div style="text-align: center; margin-top: 32px; font-size: 0.85rem;">
+                    <span style="color: #6B625E;">还没有账号？</span> <a href="#" id="go-to-register"
+                        style="color: #8A5A44; font-weight: 600; text-decoration: none; margin-left: 4px;">立即注册</a>
+                </div>
+            </div>
+
+            <!-- Register View -->
+            <div id="auth-register-view" style="display: none;">
+                <h2 style="font-family: var(--font-display); font-size: 2rem; margin-bottom: 8px; color: #3A322F;">注册账号
+                </h2>
+                <p style="color: var(--c-text-muted); font-size: 0.9rem; margin-bottom: 32px;">填写信息，开始您的社团探索之旅</p>
+
+                <form id="auth-register-form">
+                    <div class="form-group">
+                        <label style="color: #6B625E;">学号/邮箱</label>
+                        <input type="text" id="reg-id" placeholder="输入学号或邮箱" required
+                            style="border-radius: 12px; padding: 14px 16px; border: 1px solid #E5E0DA; background: #FFFFFF; font-size: 0.95rem;">
+                    </div>
+                    <div class="form-group">
+                        <label style="color: #6B625E;">设置密码</label>
+                        <input type="password" id="reg-pwd" placeholder="设置登录密码（不少于8位）" minlength="8" required
+                            style="border-radius: 12px; padding: 14px 16px; border: 1px solid #E5E0DA; background: #FFFFFF; font-size: 0.95rem;">
+                    </div>
+
+                    <div
+                        style="display: flex; align-items: center; margin: 20px 0 32px; font-size: 0.85rem; color: #6B625E;">
+                        <input type="checkbox" id="reg-agree" required style="width: auto; margin-right: 8px;">
+                        <label for="reg-agree" style="margin: 0; display: inline;">我已阅读并同意 <a href="#"
+                                style="color: #8A5A44; text-decoration: underline;">《ClubMatch 用户注册协议》</a></label>
+                    </div>
+
+                    <button type="submit" class="auth-submit-btn"
+                        style="width: 100%; padding: 14px; background: #B98C81; color: white; border: none; border-radius: 24px; font-size: 1.05rem; font-weight: 600; letter-spacing: 2px; cursor: pointer; transition: 0.3s opacity;">立即注册</button>
+                </form>
+
+                <div style="text-align: center; margin-top: 32px; font-size: 0.85rem;">
+                    <span style="color: #6B625E;">已有账号？</span> <a href="#" id="go-to-login"
+                        style="color: #8A5A44; font-weight: 600; text-decoration: none; margin-left: 4px;">立即登录</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 个人主页 Profile Overlay -->
+    <div class="profile-overlay" id="profile-overlay">
+        <div class="profile-panel">
+            <!-- Profile Header -->
+            <div class="profile-header">
+                <div class="profile-header-top">
+                    <div class="profile-avatar-wrap">
+                        <div class="profile-avatar" id="profile-avatar-display">ZX</div>
+                        <div class="profile-online-dot"></div>
+                    </div>
+                    <div class="profile-user-info">
+                        <h2 class="profile-name" id="profile-display-name" style="font-family:'Noto Serif SC',serif;">赵晓
+                        </h2>
+                        <p class="profile-meta"><span id="profile-display-id">2026010042</span> · <span
+                                id="profile-display-major">计算机学院 · 软件工程</span></p>
+                        <div class="profile-badge">2026级新生</div>
+                    </div>
+                    <button class="profile-close-btn" id="profile-close-btn"><i data-lucide="x"></i></button>
+                </div>
+
+                <!-- Stats Row -->
+                <div class="profile-stats-row">
+                    <div class="stat-chip">
+                        <span class="stat-num" id="stat-total">0</span>
+                        <span class="stat-label">已申请</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-chip">
+                        <span class="stat-num approved" id="stat-approved">0</span>
+                        <span class="stat-label">已通过</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-chip">
+                        <span class="stat-num pending" id="stat-pending">0</span>
+                        <span class="stat-label">审核中</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-chip">
+                        <span class="stat-num rejected" id="stat-rejected">0</span>
+                        <span class="stat-label">未通过</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Navigation -->
+            <div class="profile-tabs">
+                <button class="ptab active" data-tab="applications"><i data-lucide="file-text" class="icon-sm"></i>
+                    我的申请</button>
+                <button class="ptab" data-tab="transparency"><i data-lucide="bar-chart-2" class="icon-sm"></i>
+                    申请透视</button>
+                <button class="ptab" data-tab="bookmarks"><i data-lucide="bookmark" class="icon-sm"></i> 收藏社团</button>
+            </div>
+
+            <!-- Tab: My Applications -->
+            <div class="profile-tab-content active" id="tab-applications">
+                <div class="applications-list" id="applications-list">
+                    <!-- Injected by JS -->
+                    <div class="empty-state" id="empty-applications">
+                        <div class="empty-icon"><i data-lucide="inbox"></i></div>
+                        <p style="font-family:'Noto Serif SC',serif;">还没有申请记录</p>
+                        <span>去探索社团，开启你的大学生活</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Transparency / Info -->
+            <div class="profile-tab-content" id="tab-transparency">
+                <div class="transparency-intro">
+                    <i data-lucide="eye" class="trans-icon"></i>
+                    <div>
+                        <h3 style="font-family:'Noto Serif SC',serif;">信息透明计划</h3>
+                        <p>实时公开各社团招新数据，消除信息差，让每位同学都能做出更明智的选择。</p>
+                    </div>
+                </div>
+                <div class="club-stats-list" id="club-stats-list">
+                    <!-- Injected by JS -->
+                </div>
+            </div>
+
+            <!-- Tab: Bookmarks -->
+            <div class="profile-tab-content" id="tab-bookmarks">
+                <div class="bookmarks-list" id="bookmarks-list">
+                    <div class="empty-state">
+                        <div class="empty-icon"><i data-lucide="bookmark"></i></div>
+                        <p style="font-family:'Noto Serif SC',serif;">暂无收藏社团</p>
+                        <span>在社团目录中点击收藏，此处将自动同步</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -170,7 +365,7 @@
                 <!-- Club cards injected via JS -->
             </div>
         </div>
-        
+
         <!-- Club Detail Side Panel -->
         <div class="club-detail-panel" id="club-detail-panel">
             <button class="detail-back-btn" id="detail-back-btn"><i data-lucide="arrow-left"></i> 返回推荐结果</button>
@@ -187,11 +382,14 @@
                     <div class="meta-item"><i data-lucide="map-pin"></i><span id="detail-location"></span></div>
                 </div>
                 <div class="detail-tags" id="detail-tags"></div>
-                <button class="modal-submit-btn detail-apply-btn" style="font-family:'Noto Serif SC',serif; margin-top:24px;" id="detail-apply-btn">申请加入 <i data-lucide="send"></i></button>
+                <button class="modal-submit-btn detail-apply-btn"
+                    style="font-family:'Noto Serif SC',serif; margin-top:24px;" id="detail-apply-btn">申请加入 <i
+                        data-lucide="send"></i></button>
             </div>
         </div>
     </div>
 
     <script src="app.js"></script>
 </body>
+
 </html>

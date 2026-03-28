@@ -245,22 +245,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const modalSubmitBtn   = applyForm.querySelector('button[type="submit"]');
     const modalSubtitle    = document.querySelector('#modal-form-view .modal-subtitle');
 
-    let modalMode = 'apply'; // 'login' | 'apply'
-
-    function openModal(mode = 'apply') {
-        modalMode = mode;
+    function openModal() {
         formView.style.display = 'block';
         successView.style.display = 'none';
         applyForm.reset();
-
-        if (mode === 'login') {
-            modalIssueLabel.style.visibility = 'hidden';   // hide "申请加入" label
-            modalSubtitle.textContent = '完成学籍认证后，即可开始专属社团匹配测试。';
-            modalSubmitBtn.innerHTML = '开始探索 <i data-lucide="arrow-right"></i>';
-        } else {
-            modalIssueLabel.style.visibility = 'visible';
-            modalSubtitle.textContent = '请填写以下信息完成身份验证，我们将第一时间通知社团负责人与你联系。';
-            modalSubmitBtn.innerHTML = '提交申请 <i data-lucide="send"></i>';
+        
+        if (isLogged && mockUser) {
+            document.getElementById('input-student-id').value = mockUser.id;
+            document.getElementById('input-name').value = mockUser.name;
+            document.getElementById('input-major').value = mockUser.major;
         }
 
         applyModal.classList.add('show');
@@ -271,13 +264,138 @@ document.addEventListener("DOMContentLoaded", () => {
         applyModal.classList.remove('show');
     }
 
-    // Login button on cover page
-    document.getElementById('login-btn').addEventListener('click', () => openModal('login'));
+    // --- New Auth Modal Logic ---
+    const authModal = document.getElementById('auth-modal');
+    const authLoginView = document.getElementById('auth-login-view');
+    const authRegisterView = document.getElementById('auth-register-view');
+    const forgetPwdBox = document.getElementById('forget-pwd-box');
+    const verifyEmailDisplay = document.getElementById('verify-email-display');
+    const loginEmailInput = document.getElementById('login-email');
+    
+    function openAuthModal(view = 'login') {
+        if (view === 'login') {
+            authLoginView.style.display = 'block';
+            authRegisterView.style.display = 'none';
+        } else {
+            authLoginView.style.display = 'none';
+            authRegisterView.style.display = 'block';
+        }
+        if (forgetPwdBox) forgetPwdBox.style.display = 'none'; // reset forget pwd box
+        authModal.classList.add('show');
+    }
+
+    function closeAuthModal() {
+        authModal.classList.remove('show');
+    }
+
+    // Forget password flow
+    const forgetPwdBtn = document.getElementById('forget-pwd-btn');
+    if (forgetPwdBtn) {
+        forgetPwdBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (forgetPwdBox.style.display === 'none') {
+                forgetPwdBox.style.display = 'block';
+                const emailStr = loginEmailInput.value.trim();
+                verifyEmailDisplay.textContent = emailStr ? emailStr : "您的邮箱";
+            } else {
+                forgetPwdBox.style.display = 'none';
+            }
+        });
+    }
+
+    loginEmailInput.addEventListener('input', () => {
+        if (forgetPwdBox && forgetPwdBox.style.display === 'block') {
+            const emailStr = loginEmailInput.value.trim();
+            verifyEmailDisplay.textContent = emailStr ? emailStr : "您的邮箱";
+        }
+    });
+
+    const sendCodeBtn = document.getElementById('send-code-btn');
+    if (sendCodeBtn) {
+        sendCodeBtn.addEventListener('click', () => {
+            if (!loginEmailInput.value.trim()) {
+                alert("请先上拉输入交大邮箱地址！");
+                return;
+            }
+            sendCodeBtn.textContent = '验证码已发送 (60s)';
+            sendCodeBtn.style.opacity = '0.5';
+            sendCodeBtn.disabled = true;
+            setTimeout(() => {
+                sendCodeBtn.textContent = '发送验证码';
+                sendCodeBtn.style.opacity = '1';
+                sendCodeBtn.disabled = false;
+            }, 60000); // 1 minute mock
+        });
+    }
+
+    // Single login button on cover
+    const loginBtn = document.getElementById('login-btn');
+    if (loginBtn) {
+        loginBtn.addEventListener('click', () => {
+            // Check if logged in. If we had a real check, we'd do it here. 
+            // In our mock, if isLogged is true, the button is hidden, so this won't trigger.
+            // But if it were visible, we could do: if (isLogged) return openProfile();
+            openAuthModal('login');
+        });
+    }
+
+    // Switch views
+    document.getElementById('go-to-register').addEventListener('click', (e) => {
+        e.preventDefault();
+        openAuthModal('register');
+    });
+    
+    document.getElementById('go-to-login').addEventListener('click', (e) => {
+        e.preventDefault();
+        openAuthModal('login');
+    });
+
+    // Close Auth Modal
+    document.getElementById('auth-close-btn').addEventListener('click', closeAuthModal);
+    authModal.addEventListener('click', (e) => {
+        if (e.target === authModal) closeAuthModal();
+    });
+
+    // Handle Auth Form Submits
+    document.getElementById('auth-login-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        closeAuthModal();
+        loginMockUser();
+        if (pendingApply) {
+            pendingApply = false;
+            setTimeout(() => openModal(), 400);
+        }
+    });
+
+    document.getElementById('auth-register-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        closeAuthModal();
+        loginMockUser();
+        
+        if (pendingApply) {
+            pendingApply = false;
+            setTimeout(() => openModal(), 400);
+        } else {
+            // Registering starts exploration
+            setTimeout(() => switchPage('page-cover', 'page-q1'), 300);
+        }
+    });
+
+    let pendingApply = false;
 
     // Apply button on result page
     document.querySelector('.result-text-column .solid-btn').addEventListener('click', (e) => {
         e.preventDefault();
-        openModal('apply');
+        let selectedName = document.getElementById('match-title').innerText.split('：\n')[1] || document.getElementById('match-title').innerText;
+        // Strip out the newline and colon for safe lookup if needed, but easier to pass it globally or find from title
+        window.currentApplyClubId = null; // Can refine based on context
+        
+        if (!isLogged) {
+            pendingApply = true;
+            openAuthModal('login');
+        } else {
+            openModal();
+        }
     });
 
     // Close on X button
@@ -288,19 +406,21 @@ document.addEventListener("DOMContentLoaded", () => {
         if (e.target === applyModal) closeModal();
     });
 
-    // Form submission — behaviour depends on mode
+    // Apply form submission
     applyForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        if (modalMode === 'login') {
-            // Close modal and start the quiz
-            closeModal();
-            setTimeout(() => switchPage('page-cover', 'page-q1'), 300);
-        } else {
-            // Apply mode: show success screen
-            formView.style.display = 'none';
-            successView.style.display = 'block';
+        // Apply mode: show success screen
+        formView.style.display = 'none';
+        successView.style.display = 'block';
+        
+        // Record application
+        let clubName = "某个选定的社团";
+            let cId = window.currentApplyClubId || 'c1'; 
+            let targetClub = allClubsArray.find(c => c.id === cId);
+            if(targetClub) clubName = targetClub.name;
+            recordApplication(cId, clubName);
+            
             lucide.createIcons();
-        }
     });
 
     // Done button closes modal
@@ -363,6 +483,9 @@ document.addEventListener("DOMContentLoaded", () => {
         dirBtn.addEventListener('click', () => {
             renderDirectory();
             dirOverlay.classList.add('show');
+            if (allClubsArray.length > 0) {
+                openClubDetail(allClubsArray[0]);
+            }
         });
     }
 
@@ -381,7 +504,219 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('detail-apply-btn').addEventListener('click', () => {
         dirOverlay.classList.remove('show');
         clubDetailPanel.classList.remove('visible');
-        setTimeout(() => { openModal(); }, 300);
+        
+        // Find which club we are currently viewing
+        let currName = document.getElementById('detail-name').textContent;
+        let club = allClubsArray.find(c => c.name === currName);
+        if(club) window.currentApplyClubId = club.id;
+        
+        setTimeout(() => { 
+            if (!isLogged) {
+                pendingApply = true;
+                openAuthModal('login');
+            } else {
+                openModal(); 
+            }
+        }, 300);
     });
+
+    // ==========================================
+    // Profile & Transparency Logic
+    // ==========================================
+    
+    let isLogged = false;
+    let mockUser = {
+        name: "赵晓",
+        id: "2026010042",
+        major: "计算机学院 · 软件工程",
+        applications: [
+            { clubId: 'c5', clubName: '蒹葭文学社', status: 'approved', date: '2026-03-20', step: 3 },
+            { clubId: 'c8', clubName: '夜跑战队夜行者', status: 'rejected', date: '2026-03-15', step: 4 }
+        ],
+        bookmarks: []
+    };
+
+    function loginMockUser() {
+        isLogged = true;
+        const btn = document.getElementById('login-btn');
+        if (btn) btn.style.display = 'none';
+        
+        const profileBtn = document.getElementById('profile-nav-btn');
+        if (profileBtn) profileBtn.style.display = 'inline-flex';
+        
+        updateProfileStats();
+        renderApplications();
+        renderTransparency();
+    }
+
+    function recordApplication(clubId, clubName) {
+        if (!isLogged) return;
+        // Check if already applied
+        if (mockUser.applications.find(a => a.clubId === clubId)) return;
+        
+        mockUser.applications.unshift({
+            clubId: clubId,
+            clubName: clubName,
+            status: 'pending',
+            date: new Date().toISOString().split('T')[0],
+            step: 1
+        });
+        updateProfileStats();
+        renderApplications();
+    }
+
+    // Overlay triggers
+    const profileOverlay = document.getElementById('profile-overlay');
+    document.getElementById('profile-nav-btn').addEventListener('click', () => {
+        profileOverlay.classList.add('show');
+        renderTransparency(); // Refresh stats when opening
+    });
+    document.getElementById('profile-close-btn').addEventListener('click', () => {
+        profileOverlay.classList.remove('show');
+    });
+
+    // Tab switching
+    document.querySelectorAll('.ptab').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            document.querySelectorAll('.ptab').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.profile-tab-content').forEach(c => c.classList.remove('active'));
+            
+            const tabId = e.currentTarget.getAttribute('data-tab');
+            e.currentTarget.classList.add('active');
+            document.getElementById('tab-' + tabId).classList.add('active');
+        });
+    });
+
+    function updateProfileStats() {
+        const apps = mockUser.applications;
+        document.getElementById('stat-total').textContent = apps.length;
+        document.getElementById('stat-approved').textContent = apps.filter(a => a.status === 'approved').length;
+        document.getElementById('stat-pending').textContent = apps.filter(a => a.status === 'pending').length;
+        document.getElementById('stat-rejected').textContent = apps.filter(a => a.status === 'rejected').length;
+    }
+
+    function renderApplications() {
+        const container = document.getElementById('applications-list');
+        const emptyState = document.getElementById('empty-applications');
+        
+        // Remove existing items
+        container.querySelectorAll('.app-item').forEach(el => el.remove());
+        
+        if (mockUser.applications.length === 0) {
+            emptyState.style.display = 'block';
+            return;
+        }
+        emptyState.style.display = 'none';
+
+        mockUser.applications.forEach(app => {
+            const item = document.createElement('div');
+            item.className = 'app-item';
+            
+            let statusZh = { pending: '审核中', approved: '已通过', rejected: '未通过' }[app.status];
+            
+            let progressHtml = '';
+            if (app.status === 'rejected') {
+                progressHtml = `
+                    <div class="app-progress-bar"><div class="app-progress-fill rejected"></div></div>
+                    <div class="app-progress-labels">
+                        <span style="color:#DC2626">由于人数限制，遗憾未能通过</span>
+                    </div>
+                `;
+            } else if (app.status === 'approved') {
+                progressHtml = `
+                    <div class="app-progress-bar"><div class="app-progress-fill step-3"></div></div>
+                    <div class="app-progress-labels">
+                        <span>提交申请</span>
+                        <span>首轮面试</span>
+                        <span style="color:#059669;font-weight:600">正式录用</span>
+                    </div>
+                `;
+            } else if (app.step === 1) {
+                progressHtml = `
+                    <div class="app-progress-bar"><div class="app-progress-fill step-1"></div></div>
+                    <div class="app-progress-labels">
+                        <span style="color:#2563EB;font-weight:600">等待社长查看</span>
+                        <span style="opacity:0.5">安排面试</span>
+                        <span style="opacity:0.5">最终结果</span>
+                    </div>
+                `;
+            } else {
+                progressHtml = `
+                    <div class="app-progress-bar"><div class="app-progress-fill step-2"></div></div>
+                    <div class="app-progress-labels">
+                        <span>提交申请</span>
+                        <span style="color:#2563EB;font-weight:600">面试/考核期</span>
+                        <span style="opacity:0.5">最终结果</span>
+                    </div>
+                `;
+            }
+
+            item.innerHTML = `
+                <div class="app-item-header">
+                    <div>
+                        <div class="app-club-name">${app.clubName}</div>
+                        <div class="app-date">申请日期：${app.date}</div>
+                    </div>
+                    <div class="app-status ${app.status}">${statusZh}</div>
+                </div>
+                <div class="app-progress">
+                    ${progressHtml}
+                </div>
+            `;
+            container.appendChild(item);
+        });
+    }
+
+    function renderTransparency() {
+        const container = document.getElementById('club-stats-list');
+        container.innerHTML = ''; // Re-render
+
+        // Mock some transparency data for a few clubs
+        const topClubs = allClubsArray.slice(0, 5); // Just show top 5 for transparency
+        
+        topClubs.forEach((club, index) => {
+            const applicants = 40 + (index * 25) + Math.floor(Math.random() * 20); // Fake data
+            const quota = 10 + Math.floor(Math.random() * 10);
+            const ratio = ((quota / applicants) * 100).toFixed(1);
+            
+            // Randomly determine review speed mode
+            const reviewPaceOptions = ['光速反馈 (通常 1 天内)', '平稳推进 (通常 3-5 天)', '深思熟虑 (一周以上)'];
+            const pace = reviewPaceOptions[index % 3];
+
+            const card = document.createElement('div');
+            card.className = 'club-stat-card';
+            card.innerHTML = `
+                <div class="stat-card-header">
+                    <span class="stat-club-title">${club.name}</span>
+                    ${applicants > 100 ? '<span class="stat-popularity"><i data-lucide="flame" class="icon-sm"></i> 极高热度</span>' : ''}
+                </div>
+                <div class="stat-grid">
+                    <div class="stat-mini-box">
+                        <span class="s-val">${applicants}人</span>
+                        <span class="s-lbl">当前申请</span>
+                    </div>
+                    <div class="stat-mini-box">
+                        <span class="s-val">${quota}人</span>
+                        <span class="s-lbl">预计招新</span>
+                    </div>
+                    <div class="stat-mini-box" style="grid-column: span 2;">
+                        <span class="s-val" style="font-size: 0.95rem;">${pace}</span>
+                        <span class="s-lbl">往年审核速度预估</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="stat-ratio-text">
+                        <span>录取概率预估 (基于往年)</span>
+                        <span style="font-weight:600;">约 ${ratio}%</span>
+                    </div>
+                    <div class="stat-ratio-bar" style="margin-top:6px;">
+                        <div class="stat-ratio-fill" style="width: ${ratio}%; background: ${ratio > 30 ? '#059669' : (ratio > 15 ? '#D97706' : '#EF4444')}"></div>
+                    </div>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+        lucide.createIcons();
+    }
 
 });
